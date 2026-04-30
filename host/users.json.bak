@@ -1,0 +1,26 @@
+{
+  "AlliFF121": {
+    "password": "932f3c1b56257ce8539ac269d7aab42550dacf8818d075f0bdf1990562aae3ef",
+    "created_at": "2026-03-20T00:00:00Z",
+    "last_login": "2026-04-30T15:03:14.156294+00:00",
+    "is_admin": true,
+    "created_by_admin": true,
+    "created_by": null,
+    "max_bots": 999,
+    "expires_at": null,
+    "clan_feature_enabled": true,
+    "custom_apis": null
+  },
+  "saadff": {
+    "password": "64f6b25b8b6986741c73356111123e83c07d11d52b918160e8ebffd0a43334be",
+    "created_at": "2026-04-30T14:47:42.071085+00:00",
+    "last_login": "2026-04-30T19:40:05.275749+00:00",
+    "is_admin": false,
+    "created_by_admin": true,
+    "created_by": "AlliFF121",
+    "max_bots": 1,
+    "expires_at": "2026-05-30T14:47:42.070660+00:00",
+    "clan_feature_enabled": false,
+    "custom_apis": null
+  }
+}

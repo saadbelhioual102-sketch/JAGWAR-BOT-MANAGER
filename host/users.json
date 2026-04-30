@@ -1,0 +1,26 @@
+{
+  "JAGWAR": {
+    "password": "d35784c7e2e0cf5c10f0a48dd360c482bc663c2379c45f0d3612cbf290cac441",
+    "created_at": "2026-04-20T23:20:08.958331+00:00",
+    "last_login": "2026-04-30T19:51:45.267488+00:00",
+    "is_admin": true,
+    "created_by_admin": true,
+    "created_by": "RAGNAR",
+    "max_bots": 2,
+    "expires_at": "2026-04-23T23:20:08.957940+00:00",
+    "clan_feature_enabled": false,
+    "custom_apis": null
+  },
+  "SAAD": {
+    "password": "25528bd59ce5aab6983eaa397edd9b56b58db68d76dc5f27f9eb9b97da55ac15",
+    "created_at": "2026-04-30T19:52:10.435042+00:00",
+    "last_login": "2026-04-30T19:52:28.234503+00:00",
+    "is_admin": false,
+    "created_by_admin": true,
+    "created_by": "JAGWAR",
+    "max_bots": 30,
+    "expires_at": "2026-07-29T19:52:10.434789+00:00",
+    "clan_feature_enabled": false,
+    "custom_apis": null
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "add_friend": "https://ragnar-api-add-remove.vercel.app/add_friend?uid={uid}&password={pwd}&player_id={friend_id}",
+  "remove_friend": "https://ragnar-api-add-remove.vercel.app/remove_friend?uid={uid}&password={pwd}&player_id={friend_id}",
+  "list_friends": "https://friend-list-by-ragnar-ktmb.vercel.app/friend_list?uid={uid}&password={pwd}",
+  "add_clan": "https://api-add-clan-alliff.vercel.app/ReqCLan/{uid}/{pwd}/{id_clan}"
+}

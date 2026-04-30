@@ -1,0 +1,121 @@
+{
+  "bot_name": "JAGWAR BOT",
+  "owner_name": "JAGWAR",
+  "owner_telegram": "@SOLO_JAGWAR",
+  "support_telegram": "@SOLO_JAGWAR",
+  "account_uid": "",
+  "account_password": "",
+  "admin_uid": "7153983789",
+  "messages": {
+    "help_msg_1": "[C][B][ADD8E6]═══JAGWAR BOT |\n[E0FFFF]⚡ For emote without bot\n[AFEEEE]⚡ /emote [team_code] [emote_number] [uid1] [uid2] [uid3] [uid4]\n\n[E0FFFF]⚡ Send likes to player\n[AFEEEE]⚡ /like [uid]\n\n[E0FFFF]⚡ Create 3 player squad\n[AFEEEE]⚡ /3\n\n[E0FFFF]⚡ Create 5 player squad\n[AFEEEE]⚡ /5\n\n[E0FFFF]⚡ Create 6 player squad\n[AFEEEE]⚡ /6\n\n[E0FFFF]⚡ Create squad and invite specific player\n[AFEEEE]⚡ /3 [id]\n[AFEEEE]⚡ /5 [id]\n[AFEEEE]⚡ /6 [id]\n\n[E0FFFF]⚡ Intensive attack (45 seconds)\n[AFEEEE]⚡ /attack [team_code]\n\n[E0FFFF]⚡ Stop attack\n[AFEEEE]⚡ /stop_attack\n\n[AFEEEE]━━━━━━━━━━━━[E0FFFF]",
+    "help_msg_2": "[C][B][FFD700] JAGWAR BOT | [FFFF00][B]\n\n[FFFF00]⚡ Return bot to solo\n[00FFFF]⚡ /solo\n\n[FFFF00]⚡ Know who is admin\n[00FFFF]⚡ /Admin\n\n[FFFF00]⚡ Room invites spam\n[00FFFF]⚡ /mk [id]\n\n[FFFF00]⚡ Stop room spam\n[00FFFF]⚡ /stop_mk [id]\n\n[FFFF00]⚡ Send ghosts to team\n[00FFFF]⚡ /ghost [team_code] [name]\n\n[FFFF00]⚡ Lag attack on team\n[00FFFF]⚡ /lag_ghost [team_code] [name]\n\n[FFFF00]⚡ Messages in team (5 retry attempts)\n[00FFFF]⚡ /msg [team_code] [message]\n\n[FFFF00]⚡ Squad spam\n[00FFFF]⚡ /spam [id]\n\n[FFFF00]⚡ Stop spam\n[00FFFF]⚡ /stop_spam [id]\n\n[FFFF00]⚡ Friends spam\n[00FFFF]⚡ /friends [uid]\n\n[FFFF00]⚡ Clan join spam\n[00FFFF]⚡ /sp_clan [uid_clan]",
+    "admin_msg": "[C][B][FF0000]╔══════════╗\n[FFFFFF]✨ folow on Telegram    \n[FFFFFF]          ⚡ @SOLO_JAGWAR\n[FFFFFF]                   thank for support \n[FF0000]╠══════════╣\n[FFD700]⚡ OWNER : [FFFFFF]{owner_name}    \n[FFD700]✨ Name on Telegram   : [FFFFFF]{owner_telegram}  \n[FF0000]╚══════════╝\n[FFD700]✨ Developer —͟͞͞ </> JAGWAR ⚡",
+    "online_msg": "[B][C]{color}\n🎯 {bot_name} Online!\n[B][C][00FF00]Commands: Use /help",
+    "emoji_msg": "[C][B][00FFFF]────────────────────\n[33FFF3][b][c]To know the commands enter:\n[99FF80][c][b]/help\n[00FFFF]────────────────────\n[C][B][FFD700]⚡ Only JAGWAR\n[00FFFF]────────────────────"
+  },
+  "command_prefix": "/",
+  "commands": {
+    "help": "/help",
+    "admin": "/admin",
+    "stop": "/stop",
+    "like": "/like",
+    "attack": "/attack",
+    "stop_attack": "/stop_attack",
+    "mk": "/mk",
+    "stop_mk": "/stop_mk",
+    "spam": "/spam",
+    "stop_spam": "/stop_spam",
+    "ghost": "/ghost",
+    "lag_ghost": "/lag_ghost",
+    "msg": "/msg",
+    "3": "/3",
+    "5": "/5",
+    "6": "/6",
+    "solo": "/solo",
+    "emote": "/emote",
+    "friends": "/friends",
+    "sp_clan": "/sp_clan"
+  },
+  "system_messages": {
+    "global_wait": "[B][C][FFFF00]⏳ Processing your request...",
+    "success_msg": "[B][C][00FF00]✅ DoNe",
+    "error_msg": "[B][C][FF0000]❌ ERORR",
+    "processing_msg": "[B][C][FFFF00]⏳ Processing your request...",
+    "help_success": "[B][C][00FF00]✅ DoNe",
+    "help_error": "[B][C][FF0000]❌ ERORR",
+    "admin_success": "[B][C][00FF00]✅ DoNe",
+    "admin_error": "[B][C][FF0000]❌ ERORR",
+    "stop_success": "[B][C][00FF00]✅ DoNe",
+    "stop_error": "[B][C][FF0000]❌ ERORR",
+    "like_success": "[00FF00]✅ Likes Sent Successfully",
+    "like_error": "[B][C][FF0000]❌ ERORR",
+    "attack_success": "[B][C][00FF00]✅ DoNe",
+    "attack_error": "[B][C][FF0000]❌ ERORR",
+    "stop_attack_success": "[B][C][00FF00]✅ DoNe",
+    "stop_attack_error": "[B][C][FF0000]❌ ERORR",
+    "mk_success": "[B][C][00FF00]✅ DoNe",
+    "mk_error": "[B][C][FF0000]❌ ERORR",
+    "stop_mk_success": "[B][C][00FF00]✅ DoNe",
+    "stop_mk_error": "[B][C][FF0000]❌ ERORR",
+    "spam_success": "[B][C][00FF00]✅ DoNe",
+    "spam_error": "[B][C][FF0000]❌ ERORR",
+    "stop_spam_success": "[B][C][00FF00]✅ DoNe",
+    "stop_spam_error": "[B][C][FF0000]❌ ERORR",
+    "ghost_success": "[B][C][00FF00]✅ DoNe",
+    "ghost_error": "[B][C][FF0000]❌ ERORR",
+    "lag_ghost_success": "[B][C][00FF00]✅ DoNe",
+    "lag_ghost_error": "[B][C][FF0000]❌ ERORR",
+    "msg_success": "[B][C][00FF00]✅ DoNe",
+    "msg_error": "[B][C][FF0000]❌ ERORR",
+    "solo_success": "[B][C][00FF00]✅ DoNe",
+    "solo_error": "[B][C][FF0000]❌ ERORR",
+    "emote_success": "[B][C][00FF00]✅ DoNe",
+    "emote_error": "[B][C][FF0000]❌ ERORR",
+    "friends_success": "[B][C][00FF00]✅ DoNe",
+    "friends_error": "[B][C][FF0000]❌ ERORR",
+    "friends_processing": "[B][C][FFFF00]⏳ Processing your request...",
+    "sp_clan_success": "[B][C][00FF00]✅ DoNe",
+    "sp_clan_error": "[B][C][FF0000]❌ ERORR",
+    "sp_clan_processing": "[B][C][FFFF00]⏳ Processing your request...",
+    "like_limit": "[B][C][FF0000]⚠️ Sorry, you have reached the maximum limit"
+  },
+  "status": "stopped",
+  "custom_apis": {
+    "mk": {
+      "url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}",
+      "success_keyword": "success"
+    },
+    "stop_mk": {
+      "url": "http://alliff-d5m-sp-room.hf.space/stop?user_id={id}",
+      "success_keyword": "success"
+    },
+    "spam": {
+      "url": "http://alliff-d5m-spam.hf.space/spam?user_id={id}",
+      "success_keyword": "success"
+    },
+    "stop_spam": {
+      "url": "http://alliff-d5m-spam.hf.space/stop?user_id={id}",
+      "success_keyword": "success"
+    },
+    "ghost": {
+      "url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}",
+      "success_keyword": "success"
+    },
+    "lag_ghost": {
+      "url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}",
+      "success_keyword": "success"
+    },
+    "msg": {
+      "url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}",
+      "success_keyword": "success"
+    },
+    "friends": {
+      "url": "https://spam-friends-production.up.railway.app/spam?user_uid={uid}",
+      "success_keyword": "success"
+    },
+    "sp_clan": {
+      "url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}",
+      "success_keyword": "success"
+    }
+  }
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وضع الصيانة - JAGWAR Bot Manager</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: #05060a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, #101827 0%, #05060a 100%);
+      z-index: -1;
+    }
+
+    .maintenance-container {
+      max-width: 600px;
+      padding: 40px;
+      text-align: center;
+      background: rgba(12, 17, 29, 0.85);
+      border-radius: 20px;
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      animation: slideDown 0.6s ease-out;
+      position: relative;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .maintenance-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #00d4ff 0%, #0088ff 50%, #0066cc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      color: #a0aec0;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .countdown-box {
+      background: rgba(0, 212, 255, 0.1);
+      border: 2px solid #00d4ff;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .countdown-label {
+      font-size: 0.9rem;
+      color: #a0aec0;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .countdown-timer {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #00d4ff;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .status-message {
+      font-size: 1rem;
+      color: #a0aec0;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+    }
+
+    .logout-btn {
+      margin-top: 20px;
+      background: rgba(255, 85, 85, 0.1);
+      border: 1px solid #ff5555;
+      color: #ff5555;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s;
+      font-family: 'Tajawal', sans-serif;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .logout-btn:hover {
+      background: #ff5555;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 85, 85, 0.3);
+    }
+
+    .footer {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .coming-soon {
+      display: none;
+    }
+
+    .coming-soon.show {
+      display: block;
+    }
+
+    /* SweetAlert Customization */
+    .swal2-popup-custom {
+      background: #0c111d !important;
+      border: 2px solid #00d4ff !important;
+      border-radius: 24px !important;
+    }
+    .swal2-title-custom { color: #fff !important; font-family: 'Tajawal', sans-serif !important; }
+    .swal2-html-container-custom { color: #a0aec0 !important; font-family: 'Tajawal', sans-serif !important; }
+    .swal2-confirm-custom { background: linear-gradient(135deg, #00d4ff 0%, #0088ff 100%) !important; color: #000 !important; font-weight: 800 !important; border-radius: 12px !important; }
+    .swal2-cancel-custom { background: rgba(255,255,255,0.1) !important; color: #fff !important; border-radius: 12px !important; }
+
+    @media (max-width: 600px) {
+      .maintenance-container {
+        padding: 25px;
+        margin: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .countdown-timer {
+        font-size: 2rem;
+      }
+
+      .maintenance-icon {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="maintenance-container">
+    <div id="maintenanceContent">
+      <div class="maintenance-icon">🔧</div>
+      <h1>وضع الصيانة</h1>
+      <p class="description">الموقع قيد الصيانة حالياً</p>
+      
+      <div class="countdown-box">
+        <div class="countdown-label">الوقت المتبقي</div>
+        <div class="countdown-timer" id="countdownTimer">--:--:--</div>
+      </div>
+      
+      <div class="status-message">
+        سيعود الموقع قريباً جداً. شكراً لصبرك! 🙏
+      </div>
+    </div>
+
+    <div id="comingSoonContent" class="coming-soon">
+      <div class="maintenance-icon">⏰</div>
+      <h1>قريباً</h1>
+      <p class="description">الموقع سيكون متاحاً قريباً جداً</p>
+      <div class="status-message">
+        نعمل على تحسينات مهمة لتقديم تجربة أفضل لك
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="location.href='/api/logout'">🚪 تسجيل الخروج</button>
+
+    <div class="footer">
+      © JAGWAR Bot Manager - جميع الحقوق محفوظة
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // التحقق من وضع الصيانة عند تحميل الصفحة
+    async function checkMaintenanceStatus() {
+      try {
+        const res = await fetch('/api/check-maintenance');
+        const data = await res.json();
+        
+        if (!data.maintenance) {
+          // الصيانة انتهت، إعادة التوجيه للصفحة الرئيسية
+          window.location.href = '/';
+          return;
+        }
+
+        // بدء العداد التنازلي
+        startCountdown(data.remaining_seconds);
+      } catch (err) {
+        console.error('Error checking maintenance:', err);
+        // في حالة الخطأ، عرض "قريباً"
+        showComingSoon();
+      }
+    }
+
+    function startCountdown(remainingSeconds) {
+      let remaining = remainingSeconds;
+
+      function updateCountdown() {
+        const hours = Math.floor(remaining / 3600);
+        const minutes = Math.floor((remaining % 3600) / 60);
+        const seconds = remaining % 60;
+
+        document.getElementById('countdownTimer').textContent =
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        if (remaining > 0) {
+          remaining--;
+          setTimeout(updateCountdown, 1000);
+        } else {
+          // انتهى الوقت، عرض "قريباً"
+          showComingSoon();
+          
+          // التحقق كل 5 ثواني إذا انتهت الصيانة
+          setInterval(() => {
+            checkMaintenanceStatus();
+          }, 5000);
+        }
+      }
+
+      updateCountdown();
+    }
+
+    function showComingSoon() {
+      const content = document.getElementById('maintenanceContent');
+      if (content) content.style.display = 'none';
+      const comingSoon = document.getElementById('comingSoonContent');
+      if (comingSoon) comingSoon.classList.add('show');
+    }
+
+    async function logout() {
+      try {
+        await fetch('/api/logout', { method: 'POST' });
+        location.href = '/login';
+      } catch (e) {
+        location.href = '/login';
+      }
+    }
+
+    // إصلاح الرابط للزر
+    document.addEventListener('DOMContentLoaded', function() {
+      const logoutBtn = document.querySelector('.logout-btn');
+      if (logoutBtn) {
+        logoutBtn.onclick = logout;
+      }
+    });
+
+    // التحقق من وضع الصيانة كل 10 ثواني
+    setInterval(checkMaintenanceStatus, 10000);
+
+    // التحقق الأولي عند التحميل
+    window.addEventListener('load', checkMaintenanceStatus);
+  </script>
+</body>
+</html>
