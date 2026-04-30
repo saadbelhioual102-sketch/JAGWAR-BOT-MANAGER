@@ -86,7 +86,7 @@
       "success_keyword": "success"
     },
     "stop_mk": {
-      "url": "http://alliff-d5m-sp-room.hf.space/stop?user_id={id}",
+      "url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}",
       "success_keyword": "success"
     },
     "spam": {
