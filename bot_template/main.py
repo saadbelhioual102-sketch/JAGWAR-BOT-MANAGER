@@ -24,47 +24,19 @@ ADMIN_MSG = ""
 ONLINE_MSG = ""
 EMOJI_MSG = ""
 
-# إعدادات APIs الافتراضية (في حالة عدم وجود إعدادات مخصصة في config.json)
+# إعدادات APIs الافتراضية (قابلة للتعديل من الموقع)
 DEFAULT_APIS = {
-    "mk": {
-        "url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}",
-        "success_keyword": "success"
-    },
-    "stop_mk": {
-        "url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}",
-        "success_keyword": "success"
-    },
-    "spam": {
-        "url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}",
-        "success_keyword": "success"
-    },
-    "stop_spam": {
-        "url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}",
-        "success_keyword": "success"
-    },
-    "ghost": {
-        "url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}",
-        "success_keyword": "success"
-    },
-    "lag_ghost": {
-        "url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}",
-        "success_keyword": "success"
-    },
-    "msg": {
-        "url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}",
-        "success_keyword": "success"
-    },
-    "friends": {
-        "url": "https://spam-friends-production.up.railway.app/spam?user_uid={uid}",
-        "success_keyword": "success"
-    },
-    "sp_clan": {
-        "url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}",
-        "success_keyword": "success"
-    }
+    "mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
+    "stop_mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
+    "spam": {"url": "https://normal-spam-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
+    "stop_spam": {"url": "https://normal-spam-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
+    "ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}", "success_keyword": "success"},
+    "lag_ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}", "success_keyword": "success"},
+    "msg": {"url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}", "success_keyword": "success"},
+    "friends": {"url": "http://alliff-d5m-friends.hf.space/spam?uid={uid}", "success_keyword": "success"},
+    "sp_clan": {"url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}", "success_keyword": "success"}
 }
 
-# متغيرات عامة
 CUSTOM_APIS = {}
 current_config = {}
 
@@ -82,8 +54,6 @@ def load_config():
                 COMMAND_PREFIX = config.get("command_prefix", "/")
                 CUSTOM_COMMANDS = config.get("commands", {})
                 SYSTEM_MESSAGES = config.get("system_messages", {})
-                
-                # تحميل إعدادات APIs المخصصة من config.json (إن وجدت)
                 CUSTOM_APIS = config.get("custom_apis", {})
                 
                 messages = config.get('messages', {})
@@ -109,18 +79,14 @@ def load_config():
                 PROCESSING_MSG = SYSTEM_MESSAGES.get("global_wait", "[B][C][FFFF00]⏳ Processing your request...")
                 
                 print(f"[CONFIG] Loaded configuration for {BOT_NAME}")
-                print(f"[CONFIG] Custom APIs loaded: {list(CUSTOM_APIS.keys())}")
                 return config
     except Exception as e:
         print(f"[CONFIG] Error loading config.json: {e}")
     return {}
 
 def get_api_config(cmd_name):
-    """الحصول على إعدادات API من config.json (مع إمكانية التعديل من الموقع)"""
-    # الأولوية للإعدادات المخصصة من config.json
     if cmd_name in CUSTOM_APIS and CUSTOM_APIS[cmd_name].get("url"):
         return CUSTOM_APIS[cmd_name]
-    # وإلا استخدم الإعدادات الافتراضية
     return DEFAULT_APIS.get(cmd_name, {})
 
 def get_system_msg(cmd_name, type):
@@ -518,18 +484,6 @@ async def SEndPacKeT(writer_whisper, writer_online, TypE, PacKeT):
     else: 
         return 'UnsoPorTed TypE ! >> ErrrroR (:():' 
 
-async def handle_friend_request_accepted(inviter_id, key, iv, current_chat_type, current_chat_id):
-    welcome_message = f"""[C][B][FFD700]╔══════════════════════════╗
-[FFFFFF]Thanks for accepting friend request
-[FFFFFF]To know the commands list 
-[FFFFFF]Send me any emoji you have 
-[FFD700]╠══════════════════════════╣
-[FF0000]DEV : @AlliFF_BOT
-[FFD700]╚══════════════════════════╝"""
-    
-    P = await SEndMsG(current_chat_type, welcome_message, inviter_id, current_chat_id, key, iv)
-    return P
-
 async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_chat_id):
     response_message = EMOJI_MSG if EMOJI_MSG else f"""[C][B][00FFFF]────────────────────
 [33FFF3][b][c]To know the commands enter:
@@ -540,6 +494,8 @@ async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_c
     
     P = await SEndMsG(current_chat_type, response_message, sender_id, current_chat_id, key, iv)
     return P
+
+# ==================== دوال الأوامر القديمة (التي لا تستخدم API) ====================
 
 async def attack_loop(team_code, uid, chat_id, chat_type, key, iv, region):
     global attack_running, stop_attack
@@ -601,6 +557,38 @@ async def attack_loop(team_code, uid, chat_id, chat_type, key, iv, region):
         stop_attack = False
         print(f"[ATTACK] Attack loop stopped for team {team_code}")
 
+async def handle_squad_command(squad_size, sender_uid, current_chat_type, current_chat_id, key, iv, region):
+    try:
+        print(f"[SQUAD] Creating {squad_size}-player squad")
+        
+        PAc = await OpEnSq(key, iv, region)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', PAc)
+        
+        await asyncio.sleep(1)
+        
+        C = await cHSq(squad_size, sender_uid, key, iv, region)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', C)
+        
+        await asyncio.sleep(1)
+        
+        V = await SEnd_InV(squad_size, sender_uid, key, iv, region)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', V)
+        
+        await asyncio.sleep(5)
+        
+        E = await ExiT(None, key, iv)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', E)
+        
+        await asyncio.sleep(2)
+        change_to_solo = await cHSq(1, sender_uid, key, iv, region)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', change_to_solo)
+        
+        return True
+        
+    except Exception as e:
+        print(f"[SQUAD] Error: {e}")
+        return False
+
 async def handle_squad_with_id_command(squad_size, target_id, sender_uid, current_chat_type, current_chat_id, key, iv, region):
     try:
         print(f"[SQUAD] Creating {squad_size}-player squad and inviting {target_id}")
@@ -630,60 +618,52 @@ async def handle_squad_with_id_command(squad_size, target_id, sender_uid, curren
         change_to_solo = await cHSq(1, sender_uid, key, iv, region)
         await SEndPacKeT(whisper_writer, online_writer, 'OnLine', change_to_solo)
         
-        P = await SEndMsG(current_chat_type, f"[B][C][00FF00]✅ Done", sender_uid, current_chat_id, key, iv)
-        await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-        
         return True
         
     except Exception as e:
         print(f"[SQUAD] Error: {e}")
-        P = await SEndMsG(current_chat_type, get_system_msg("squad", "error"), sender_uid, current_chat_id, key, iv)
-        await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
         return False
 
-async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
-    global online_writer, whisper_writer
-    while True:
-        try:
-            reader , writer = await asyncio.open_connection(ip, int(port))
-            online_writer = writer
-            bytes_payload = bytes.fromhex(AutHToKen)
-            online_writer.write(bytes_payload)
-            await online_writer.drain()
-            while True:
-                data2 = await reader.read(9999)
-                if not data2: 
-                    break
-                
-                if data2.hex().startswith('0500') and len(data2.hex()) > 1000:
-                    try:
-                        packet = await DeCode_PackEt(data2.hex()[10:])
-                        packet = json.loads(packet)
-                        OwNer_UiD , CHaT_CoDe , SQuAD_CoDe = await GeTSQDaTa(packet)
+async def emote_command(team_code, emote_num, uids, current_chat_type, current_uid, current_chat_id, key, iv, region):
+    try:
+        if not EMOTE_DATA:
+            return False, "لا توجد بيانات رقصات"
+        
+        emote_id = None
+        emote_num_int = int(emote_num)
+        for emote in EMOTE_DATA:
+            if int(emote["Number"]) == emote_num_int:
+                emote_id = emote["Id"]
+                break
+        
+        if not emote_id:
+            return False, "رقم رقصة غير صحيح"
+        
+        join_packet = await GenJoinSquadsPacket(team_code, key, iv)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', join_packet)
+        await asyncio.sleep(2)
+        
+        success_count = 0
+        for target_uid in uids:
+            try:
+                emote_packet = await Emote_k(int(target_uid), emote_id, key, iv, region)
+                await SEndPacKeT(whisper_writer, online_writer, 'OnLine', emote_packet)
+                success_count += 1
+                await asyncio.sleep(0.5)
+            except Exception as e:
+                print(f"Error sending emote to {target_uid}: {e}")
+        
+        leave_packet = await ExiT(None, key, iv)
+        await SEndPacKeT(whisper_writer, online_writer, 'OnLine', leave_packet)
+        
+        return True, f"✅ تم إرسال الرقصة {emote_num} إلى {success_count} لاعب"
+        
+    except Exception as e:
+        return False, str(e)
 
-                        JoinCHaT = await AutH_Chat(3 , OwNer_UiD , CHaT_CoDe, key,iv)
-                        await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , JoinCHaT)
-
-                        message = f'[B][C]{get_random_color()}\n🎯 AlliFF BOT Online!\n[B][C][00FF00]Commands: Use /help'
-                        P = await SEndMsG(0 , message , OwNer_UiD , OwNer_UiD , key , iv)
-                        await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , P)
-
-                    except Exception as e:
-                        pass
-
-            online_writer.close() 
-            await online_writer.wait_closed() 
-            online_writer = None
-
-        except Exception as e: 
-            print(f"- ErroR With {ip}:{port} - {e}") 
-            online_writer = None
-        await asyncio.sleep(reconnect_delay)
-
-# ==================== دوال الأوامر باستخدام APIs قابلة للتغيير من الموقع ====================
+# ==================== دوال الأوامر التي تستخدم API (قابلة للتعديل من الموقع) ====================
 
 async def call_api(url, success_keyword, params):
-    """دالة عامة لاستدعاء API مع دعم الرد النصي أو JSON"""
     formatted_url = url.format(**params)
     print(f"[API] Calling: {formatted_url}")
     
@@ -736,12 +716,10 @@ async def mk_task(user_id, chat_id_param, chat_type_param, msg, key, iv):
         await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
         return
     
-    # إرسال رسالة المعالجة
     processing_msg = get_system_msg("mk", "processing")
     P = await SEndMsG(chat_type_param, processing_msg, user_id, chat_id_param, key, iv)
     await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
     
-    # الحصول على إعدادات API من config.json (قابلة للتعديل من الموقع)
     api_config = get_api_config("mk")
     api_url = api_config.get("url")
     success_keyword = api_config.get("success_keyword", "success")
@@ -751,14 +729,12 @@ async def mk_task(user_id, chat_id_param, chat_type_param, msg, key, iv):
         await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
         return
     
-    success, result = await call_api(api_url, success_keyword, {"id": target_id})
+    success, _ = await call_api(api_url, success_keyword, {"id": target_id})
     
     if success:
         P = await SEndMsG(chat_type_param, get_system_msg("mk", "success"), user_id, chat_id_param, key, iv)
-        print(f"[MK] Success - Result: {result}")
     else:
         P = await SEndMsG(chat_type_param, get_system_msg("mk", "error"), user_id, chat_id_param, key, iv)
-        print(f"[MK] Failed - Result: {result}")
     
     await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
 
@@ -1074,8 +1050,47 @@ async def sp_clan_task(user_id, chat_id_param, chat_type_param, msg, key, iv):
 
 # ==================== نهاية دوال الأوامر ====================
 
+async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
+    global online_writer, whisper_writer
+    while True:
+        try:
+            reader , writer = await asyncio.open_connection(ip, int(port))
+            online_writer = writer
+            bytes_payload = bytes.fromhex(AutHToKen)
+            online_writer.write(bytes_payload)
+            await online_writer.drain()
+            while True:
+                data2 = await reader.read(9999)
+                if not data2: 
+                    break
+                
+                if data2.hex().startswith('0500') and len(data2.hex()) > 1000:
+                    try:
+                        packet = await DeCode_PackEt(data2.hex()[10:])
+                        packet = json.loads(packet)
+                        OwNer_UiD , CHaT_CoDe , SQuAD_CoDe = await GeTSQDaTa(packet)
+
+                        JoinCHaT = await AutH_Chat(3 , OwNer_UiD , CHaT_CoDe, key,iv)
+                        await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , JoinCHaT)
+
+                        message = f'[B][C]{get_random_color()}\n🎯 AlliFF BOT Online!\n[B][C][00FF00]Commands: Use /help'
+                        P = await SEndMsG(0 , message , OwNer_UiD , OwNer_UiD , key , iv)
+                        await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , P)
+
+                    except Exception as e:
+                        pass
+
+            online_writer.close() 
+            await online_writer.wait_closed() 
+            online_writer = None
+
+        except Exception as e: 
+            print(f"- ErroR With {ip}:{port} - {e}") 
+            online_writer = None
+        await asyncio.sleep(reconnect_delay)
+
 async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event, region , reconnect_delay=0.5):
-    global whisper_writer, online_writer
+    global whisper_writer, online_writer, attack_running, stop_attack
     
     while True:
         try:
@@ -1124,9 +1139,14 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                         if is_bot_muted():
                             continue
 
-                        # ==================== الأوامر ====================
+                        # ==================== الأوامر القديمة (التي لا تستخدم API) ====================
                         
-                        if check_cmd(inPuTMsG, 'like'):
+                        if inPuTMsG.strip() == "" or inPuTMsG.strip().startswith(":") or inPuTMsG.strip().startswith("("):
+                            emoji_response = await handle_emoji_received(current_uid, key, iv, current_chat_type, current_chat_id)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', emoji_response)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'like'):
                             parts = inPuTMsG.strip().split()
                             if len(parts) < 2:
                                 P = await SEndMsG(current_chat_type, "[FF0000]❌ Please provide UID: /like [uid]", current_uid, current_chat_id, key, iv)
@@ -1142,69 +1162,6 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                                 else:
                                     P = await SEndMsG(current_chat_type, "[FF0000]❌ Invalid UID", current_uid, current_chat_id, key, iv)
                                     await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'mk'):
-                            asyncio.create_task(mk_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'stop_mk'):
-                            asyncio.create_task(stop_mk_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'spam'):
-                            asyncio.create_task(spam_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'stop_spam'):
-                            asyncio.create_task(stop_spam_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'ghost'):
-                            asyncio.create_task(ghost_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'lag_ghost'):
-                            asyncio.create_task(lag_ghost_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'msg'):
-                            asyncio.create_task(msg_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'friends'):
-                            asyncio.create_task(friends_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'sp_clan'):
-                            asyncio.create_task(sp_clan_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
-                            continue
-                        
-                        elif inPuTMsG.startswith("/admin"):
-                            if is_admin(current_uid):
-                                message = ADMIN_MSG if ADMIN_MSG else "Admin Panel"
-                                P = await SEndMsG(current_chat_type, message, current_uid, current_chat_id, key, iv)
-                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-                            else:
-                                P = await SEndMsG(current_chat_type, "[FF0000]❌ You are not admin", current_uid, current_chat_id, key, iv)
-                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'help'):
-                            message1 = HELP_MSG_1 if HELP_MSG_1 else "Help message"
-                            message2 = HELP_MSG_2 if HELP_MSG_2 else "Help message 2"
-                            P1 = await SEndMsG(current_chat_type, message1, current_uid, current_chat_id, key, iv)
-                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P1)
-                            await asyncio.sleep(0.5)
-                            P2 = await SEndMsG(current_chat_type, message2, current_uid, current_chat_id, key, iv)
-                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P2)
-                            continue
-                        
-                        elif check_cmd(inPuTMsG, 'solo'):
-                            P = await SEndMsG(current_chat_type, get_system_msg("solo", "success"), current_uid, current_chat_id, key, iv)
-                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-                            leave = await ExiT(current_uid, key, iv)
-                            await SEndPacKeT(whisper_writer, online_writer, 'OnLine', leave)
                             continue
                         
                         elif check_cmd(inPuTMsG, 'attack'):
@@ -1240,21 +1197,67 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                             else:
                                 P = await SEndMsG(current_chat_type, get_system_msg(str(squad_size), "processing"), current_uid, current_chat_id, key, iv)
                                 await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
-                                
-                                PAc = await OpEnSq(key, iv, region)
-                                await SEndPacKeT(whisper_writer, online_writer, 'OnLine', PAc)
-                                C = await cHSq(squad_size, current_uid, key, iv, region)
-                                await asyncio.sleep(0.3)
-                                await SEndPacKeT(whisper_writer, online_writer, 'OnLine', C)
-                                V = await SEnd_InV(squad_size, current_uid, key, iv, region)
-                                await asyncio.sleep(0.3)
-                                await SEndPacKeT(whisper_writer, online_writer, 'OnLine', V)
-                                await asyncio.sleep(2)
-                                E = await ExiT(None, key, iv)
-                                await SEndPacKeT(whisper_writer, online_writer, 'OnLine', E)
-                                
-                                P = await SEndMsG(current_chat_type, get_system_msg(str(squad_size), "success"), current_uid, current_chat_id, key, iv)
+                                success = await handle_squad_command(squad_size, current_uid, current_chat_type, current_chat_id, key, iv, region)
+                                if success:
+                                    P = await SEndMsG(current_chat_type, get_system_msg(str(squad_size), "success"), current_uid, current_chat_id, key, iv)
+                                else:
+                                    P = await SEndMsG(current_chat_type, get_system_msg(str(squad_size), "error"), current_uid, current_chat_id, key, iv)
                                 await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'solo'):
+                            P = await SEndMsG(current_chat_type, get_system_msg("solo", "success"), current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            leave = await ExiT(current_uid, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'OnLine', leave)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'emote'):
+                            parts = inPuTMsG.strip().split()
+                            if len(parts) < 4:
+                                P = await SEndMsG(current_chat_type, get_system_msg("emote", "error"), current_uid, current_chat_id, key, iv)
+                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                                continue
+                            
+                            team_code = parts[1]
+                            emote_num = parts[2]
+                            uids = parts[3:]
+                            
+                            if not team_code.isdigit():
+                                P = await SEndMsG(current_chat_type, get_system_msg("emote", "error"), current_uid, current_chat_id, key, iv)
+                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                                continue
+                            
+                            P = await SEndMsG(current_chat_type, get_system_msg("emote", "processing"), current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            
+                            success, msg = await emote_command(team_code, emote_num, uids, current_chat_type, current_uid, current_chat_id, key, iv, region)
+                            
+                            if success:
+                                P = await SEndMsG(current_chat_type, get_system_msg("emote", "success"), current_uid, current_chat_id, key, iv)
+                            else:
+                                P = await SEndMsG(current_chat_type, get_system_msg("emote", "error"), current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
+                        elif inPuTMsG.startswith("/admin"):
+                            if is_admin(current_uid):
+                                message = ADMIN_MSG if ADMIN_MSG else "[C][B][FF0000]Admin Panel"
+                                P = await SEndMsG(current_chat_type, message, current_uid, current_chat_id, key, iv)
+                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            else:
+                                P = await SEndMsG(current_chat_type, "[FF0000]❌ You are not admin", current_uid, current_chat_id, key, iv)
+                                await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'help'):
+                            message1 = HELP_MSG_1 if HELP_MSG_1 else "[C][B][ADD8E6]Help message 1"
+                            message2 = HELP_MSG_2 if HELP_MSG_2 else "[C][B][FFD700]Help message 2"
+                            P1 = await SEndMsG(current_chat_type, message1, current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P1)
+                            await asyncio.sleep(0.5)
+                            P2 = await SEndMsG(current_chat_type, message2, current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P2)
                             continue
                         
                         elif check_cmd(inPuTMsG, 'stop') and is_admin(current_uid):
@@ -1263,9 +1266,42 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                             await connection_pool.close()
                             os._exit(0)
                         
-                        elif inPuTMsG.strip() == "" or inPuTMsG.strip().startswith(":") or inPuTMsG.strip().startswith("("):
-                            emoji_response = await handle_emoji_received(current_uid, key, iv, current_chat_type, current_chat_id)
-                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', emoji_response)
+                        # ==================== الأوامر الجديدة (التي تستخدم API) ====================
+                        
+                        elif check_cmd(inPuTMsG, 'mk'):
+                            asyncio.create_task(mk_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'stop_mk'):
+                            asyncio.create_task(stop_mk_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'spam'):
+                            asyncio.create_task(spam_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'stop_spam'):
+                            asyncio.create_task(stop_spam_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'ghost'):
+                            asyncio.create_task(ghost_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'lag_ghost'):
+                            asyncio.create_task(lag_ghost_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'msg'):
+                            asyncio.create_task(msg_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'friends'):
+                            asyncio.create_task(friends_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'sp_clan'):
+                            asyncio.create_task(sp_clan_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
                             continue
                         
                         elif inPuTMsG.strip().startswith(COMMAND_PREFIX):
