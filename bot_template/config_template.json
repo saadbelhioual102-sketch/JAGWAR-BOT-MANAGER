@@ -90,11 +90,11 @@
       "success_keyword": "success"
     },
     "spam": {
-      "url": "http://alliff-d5m-spam.hf.space/spam?user_id={id}",
+      "url": "https://normal-spam-production.up.railway.app/spam?user_id={id}",
       "success_keyword": "success"
     },
     "stop_spam": {
-      "url": "http://alliff-d5m-spam.hf.space/stop?user_id={id}",
+      "url": "https://normal-spam-production.up.railway.app/stop?user_id={id}",
       "success_keyword": "success"
     },
     "ghost": {
