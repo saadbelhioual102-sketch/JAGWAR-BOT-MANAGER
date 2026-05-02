@@ -13,32 +13,35 @@ from Crypto.Util.Padding import pad
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-ADMIN_UID = "760840390"
-COMMAND_PREFIX = "/"
-BOT_NAME = "JAGWAR BOT"
-OWNER_NAME = "AlliFF"
-OWNER_TELEGRAM = "@SOLO_RAGNAR"
+# إعدادات افتراضية (تستخدم فقط إذا لم توجد في config.json)
+DEFAULT_ADMIN_UID = "760840390"
+DEFAULT_COMMAND_PREFIX = "/"
+DEFAULT_BOT_NAME = "AlliFF BOT"
+DEFAULT_OWNER_NAME = "AlliFF"
+DEFAULT_OWNER_TELEGRAM = "@AlliFF_BOT"
+
+# متغيرات عامة سيتم تحميلها من config.json
+ADMIN_UID = DEFAULT_ADMIN_UID
+COMMAND_PREFIX = DEFAULT_COMMAND_PREFIX
+BOT_NAME = DEFAULT_BOT_NAME
+OWNER_NAME = DEFAULT_OWNER_NAME
+OWNER_TELEGRAM = DEFAULT_OWNER_TELEGRAM
 HELP_MSG_1 = ""
 HELP_MSG_2 = ""
 ADMIN_MSG = ""
 ONLINE_MSG = ""
 EMOJI_MSG = ""
-
-# إعدادات APIs الافتراضية (قابلة للتعديل من الموقع)
-DEFAULT_APIS = {
-    "mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
-    "stop_mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
-    "spam": {"url": "https://normal-spam-ff.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
-    "stop_spam": {"url": "https://normal-spam-ff.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
-    "ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}", "success_keyword": "success"},
-    "lag_ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}", "success_keyword": "success"},
-    "msg": {"url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}", "success_keyword": "success"},
-    "friends": {"url": "https://spam-friends-production.up.railway.app/spam?user_uid={uid}", "success_keyword": "success"},
-    "sp_clan": {"url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}", "success_keyword": "success"}
-}
-
+SUCCESS_MSG = ""
+ERROR_MSG = ""
+PROCESSING_MSG = ""
+CUSTOM_COMMANDS = {}
+SYSTEM_MESSAGES = {}
 CUSTOM_APIS = {}
 current_config = {}
+
+# متغيرات لمراقبة صحة اتصال الدردشة
+last_chat_activity = time.time()
+chat_reconnect_attempts = 0
 
 def load_config():
     global ADMIN_UID, BOT_NAME, OWNER_NAME, OWNER_TELEGRAM, HELP_MSG_1, HELP_MSG_2, ADMIN_MSG, ONLINE_MSG, EMOJI_MSG, SUCCESS_MSG, ERROR_MSG, PROCESSING_MSG, CUSTOM_COMMANDS, SYSTEM_MESSAGES, COMMAND_PREFIX, current_config, CUSTOM_APIS
@@ -47,14 +50,18 @@ def load_config():
             with open('config.json', 'r', encoding='utf-8') as f:
                 current_config = json.load(f)
                 config = current_config
-                ADMIN_UID = str(config.get('admin_uid', ADMIN_UID))
-                BOT_NAME = config.get('bot_name', BOT_NAME)
-                OWNER_NAME = config.get('owner_name', OWNER_NAME)
-                OWNER_TELEGRAM = config.get('owner_telegram', OWNER_TELEGRAM)
-                COMMAND_PREFIX = config.get("command_prefix", "/")
+                
+                ADMIN_UID = str(config.get('admin_uid', DEFAULT_ADMIN_UID))
+                BOT_NAME = config.get('bot_name', DEFAULT_BOT_NAME)
+                OWNER_NAME = config.get('owner_name', DEFAULT_OWNER_NAME)
+                OWNER_TELEGRAM = config.get('owner_telegram', DEFAULT_OWNER_TELEGRAM)
+                COMMAND_PREFIX = config.get("command_prefix", DEFAULT_COMMAND_PREFIX)
                 CUSTOM_COMMANDS = config.get("commands", {})
                 SYSTEM_MESSAGES = config.get("system_messages", {})
+                
+                # تحميل إعدادات APIs المخصصة من config.json
                 CUSTOM_APIS = config.get("custom_apis", {})
+                print(f"[CONFIG] Loaded {len(CUSTOM_APIS)} custom APIs from config.json")
                 
                 messages = config.get('messages', {})
                 HELP_MSG_1 = messages.get('help_msg_1', "")
@@ -85,8 +92,22 @@ def load_config():
     return {}
 
 def get_api_config(cmd_name):
+    """الحصول على إعدادات API من config.json (إذا وجدت) أو من الإعدادات الافتراضية المضمنة"""
     if cmd_name in CUSTOM_APIS and CUSTOM_APIS[cmd_name].get("url"):
+        print(f"[API] Using custom config for {cmd_name}")
         return CUSTOM_APIS[cmd_name]
+    
+    DEFAULT_APIS = {
+        "mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
+        "stop_mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
+        "spam": {"url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
+        "stop_spam": {"url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
+        "ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}", "success_keyword": "success"},
+        "lag_ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}", "success_keyword": "success"},
+        "msg": {"url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}", "success_keyword": "success"},
+        "friends": {"url": "http://alliff-d5m-friends.hf.space/spam?uid={uid}", "success_keyword": "success"},
+        "sp_clan": {"url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}", "success_keyword": "success"}
+    }
     return DEFAULT_APIS.get(cmd_name, {})
 
 def get_system_msg(cmd_name, type):
@@ -200,7 +221,7 @@ def send_likes(uid):
     try:
         print(f"[DEBUG] Sending like request for UID: {uid}")
         likes_api_response = requests.get(
-            f"https://like-api-production-071e.up.railway.app/like?uid={uid}",
+            f"http://alliff-d5m-api-like.hf.space/like?uid={uid}",
             timeout=30
         )
         
@@ -475,14 +496,30 @@ async def SEndMsG(H , message , Uid , chat_id , key , iv):
     return msg_packet
 
 async def SEndPacKeT(writer_whisper, writer_online, TypE, PacKeT):
-    if TypE == 'ChaT' and writer_whisper: 
-        writer_whisper.write(PacKeT) 
-        await writer_whisper.drain()
-    elif TypE == 'OnLine': 
-        writer_online.write(PacKeT) 
-        await writer_online.drain()
-    else: 
-        return 'UnsoPorTed TypE ! >> ErrrroR (:():' 
+    """إرسال الحزمة مع التحقق من صحة الكاتب"""
+    if TypE == 'ChaT':
+        if not writer_whisper:
+            print("[ERROR] whisper_writer is None, cannot send chat message")
+            return False
+        try:
+            writer_whisper.write(PacKeT)
+            await writer_whisper.drain()
+            return True
+        except Exception as e:
+            print(f"[ERROR] Failed to send chat message: {e}")
+            return False
+    elif TypE == 'OnLine':
+        if not writer_online:
+            print("[ERROR] online_writer is None")
+            return False
+        try:
+            writer_online.write(PacKeT)
+            await writer_online.drain()
+            return True
+        except Exception as e:
+            print(f"[ERROR] Failed to send online packet: {e}")
+            return False
+    return False
 
 async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_chat_id):
     response_message = EMOJI_MSG if EMOJI_MSG else f"""[C][B][00FFFF]────────────────────
@@ -495,7 +532,7 @@ async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_c
     P = await SEndMsG(current_chat_type, response_message, sender_id, current_chat_id, key, iv)
     return P
 
-# ==================== دوال الأوامر القديمة (التي لا تستخدم API) ====================
+# ==================== دوال الأوامر القديمة ====================
 
 async def attack_loop(team_code, uid, chat_id, chat_type, key, iv, region):
     global attack_running, stop_attack
@@ -661,7 +698,7 @@ async def emote_command(team_code, emote_num, uids, current_chat_type, current_u
     except Exception as e:
         return False, str(e)
 
-# ==================== دوال الأوامر التي تستخدم API (قابلة للتعديل من الموقع) ====================
+# ==================== دوال الأوامر التي تستخدم API ====================
 
 async def call_api(url, success_keyword, params):
     formatted_url = url.format(**params)
@@ -1050,6 +1087,24 @@ async def sp_clan_task(user_id, chat_id_param, chat_type_param, msg, key, iv):
 
 # ==================== نهاية دوال الأوامر ====================
 
+async def check_chat_health():
+    """مراقبة صحة اتصال الدردشة وإعادة الاتصال إذا لزم الأمر"""
+    global whisper_writer, last_chat_activity, chat_reconnect_attempts
+    while True:
+        await asyncio.sleep(30)  # كل 30 ثانية
+        now = time.time()
+        
+        # إذا مر أكثر من 120 ثانية بدون نشاط في الدردشة
+        if now - last_chat_activity > 120:
+            print("[HEALTH] Chat seems dead, forcing reconnect...")
+            if whisper_writer:
+                try:
+                    whisper_writer.close()
+                except:
+                    pass
+                whisper_writer = None
+            chat_reconnect_attempts += 1
+
 async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
     global online_writer, whisper_writer
     while True:
@@ -1090,7 +1145,7 @@ async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
         await asyncio.sleep(reconnect_delay)
 
 async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event, region , reconnect_delay=0.5):
-    global whisper_writer, online_writer, attack_running, stop_attack
+    global whisper_writer, online_writer, attack_running, stop_attack, last_chat_activity
     
     while True:
         try:
@@ -1122,6 +1177,9 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                         current_chat_id = response.Data.Chat_ID
                         current_chat_type = response.Data.chat_type
                         inPuTMsG = response.Data.msg.lower()
+                        
+                        # تحديث وقت آخر نشاط في الدردشة
+                        last_chat_activity = time.time()
                     except:
                         continue
 
@@ -1139,7 +1197,7 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                         if is_bot_muted():
                             continue
 
-                        # ==================== الأوامر القديمة (التي لا تستخدم API) ====================
+                        # ==================== الأوامر القديمة ====================
                         
                         if inPuTMsG.strip() == "" or inPuTMsG.strip().startswith(":") or inPuTMsG.strip().startswith("("):
                             emoji_response = await handle_emoji_received(current_uid, key, iv, current_chat_type, current_chat_id)
@@ -1266,7 +1324,7 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                             await connection_pool.close()
                             os._exit(0)
                         
-                        # ==================== الأوامر الجديدة (التي تستخدم API) ====================
+                        # ==================== الأوامر الجديدة (API) ====================
                         
                         elif check_cmd(inPuTMsG, 'mk'):
                             asyncio.create_task(mk_task(current_uid, current_chat_id, current_chat_type, inPuTMsG, key, iv))
@@ -1432,18 +1490,23 @@ async def watch_config():
             print(f"[WATCHER] Error: {e}")
 
 async def StarTinG():
+    global chat_reconnect_attempts
     watcher_task = asyncio.create_task(watch_config())
+    health_task = asyncio.create_task(check_chat_health())
     
     while True:
-        try: 
-            await asyncio.wait_for(MaiiiinE() , timeout = 7 * 60 * 60)
-        except asyncio.TimeoutError: 
-            print("Token ExpiRed ! , ResTartinG")
-        except Exception as e: 
-            print(f"ErroR TcP - {e} => ResTarTinG ...")
+        try:
+            chat_reconnect_attempts = 0
+            await asyncio.wait_for(MaiiiinE(), timeout=7 * 60 * 60)
+        except asyncio.TimeoutError:
+            print("Token Expired! Restarting...")
+        except Exception as e:
+            print(f"Error TCP - {e} => Restarting...")
         finally:
             if connection_pool:
                 await connection_pool.close()
+            # انتظر 5 ثوانٍ قبل إعادة التشغيل
+            await asyncio.sleep(5)
 
 if __name__ == '__main__':
     asyncio.run(StarTinG())
