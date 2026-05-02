@@ -14,11 +14,11 @@ from Crypto.Util.Padding import pad
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # إعدادات افتراضية (تستخدم فقط إذا لم توجد في config.json)
-DEFAULT_ADMIN_UID = "760840390"
+DEFAULT_ADMIN_UID = "9933949869"
 DEFAULT_COMMAND_PREFIX = "/"
-DEFAULT_BOT_NAME = "AlliFF BOT"
-DEFAULT_OWNER_NAME = "AlliFF"
-DEFAULT_OWNER_TELEGRAM = "@AlliFF_BOT"
+DEFAULT_BOT_NAME = "JAGWAR BOT"
+DEFAULT_OWNER_NAME = "JAGWAR"
+DEFAULT_OWNER_TELEGRAM = "@SOLO_JAGWAR"
 
 # متغيرات عامة سيتم تحميلها من config.json
 ADMIN_UID = DEFAULT_ADMIN_UID
@@ -526,7 +526,7 @@ async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_c
 [33FFF3][b][c]To know the commands enter:
 [99FF80][c][b]/help
 [00FFFF]────────────────────
-[C][B][FFD700]⚡ Only AlliFF YT 2K
+[C][B][FFD700]⚡ Only JAGWAR
 [00FFFF]────────────────────"""
     
     P = await SEndMsG(current_chat_type, response_message, sender_id, current_chat_id, key, iv)
@@ -1128,7 +1128,7 @@ async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
                         JoinCHaT = await AutH_Chat(3 , OwNer_UiD , CHaT_CoDe, key,iv)
                         await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , JoinCHaT)
 
-                        message = f'[B][C]{get_random_color()}\n🎯 AlliFF BOT Online!\n[B][C][00FF00]Commands: Use /help'
+                        message = f'[B][C]{get_random_color()}\n🎯 JAGWAR BOT Online!\n[B][C][00FF00]Commands: Use /help'
                         P = await SEndMsG(0 , message , OwNer_UiD , OwNer_UiD , key , iv)
                         await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , P)
 
@@ -1467,7 +1467,7 @@ async def MaiiiinE():
     os.system('clear')
     print(render('AlliFF', colors=['white', 'green'], align='center'))
     print('')
-    print(f" - AlliFF BOT STarTinG And OnLine on TarGet : {TarGeT} | BOT NAME : {acc_name}\n")
+    print(f" - JAGWAR BOT STarTinG And OnLine on TarGet : {TarGeT} | BOT NAME : {acc_name}\n")
     print(f" - BoT sTaTus > GooD | OnLinE ! (:")    
     print(f" - winter | Bot Uptime: {time.strftime('%H:%M:%S', time.gmtime(time.time() - bot_start_time))}")    
     await asyncio.gather(task1 , task2)
