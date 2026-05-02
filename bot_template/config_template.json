@@ -90,11 +90,11 @@
       "success_keyword": "success"
     },
     "spam": {
-      "url": "https://normal-spam-production.up.railway.app/spam?user_id={id}",
+      "url": "https://normal-spam-ff.up.railway.app/spam?user_id={id}",
       "success_keyword": "success"
     },
     "stop_spam": {
-      "url": "https://normal-spam-production.up.railway.app/stop?user_id={id}",
+      "url": "https://normal-spam-ff.up.railway.app/stop?user_id={id}",
       "success_keyword": "success"
     },
     "ghost": {
