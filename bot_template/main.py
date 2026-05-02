@@ -28,12 +28,12 @@ EMOJI_MSG = ""
 DEFAULT_APIS = {
     "mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
     "stop_mk": {"url": "https://ragnar-mk-spm-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
-    "spam": {"url": "https://normal-spam-production.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
-    "stop_spam": {"url": "https://normal-spam-production.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
+    "spam": {"url": "https://normal-spam-ff.up.railway.app/spam?user_id={id}", "success_keyword": "success"},
+    "stop_spam": {"url": "https://normal-spam-ff.up.railway.app/stop?user_id={id}", "success_keyword": "success"},
     "ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost?teamcode={team_code}&name={name}", "success_keyword": "success"},
     "lag_ghost": {"url": "http://alliff-d5m-api-ghost.hf.space/api/ghost_attack?teamcode={team_code}&name={name}", "success_keyword": "success"},
     "msg": {"url": "http://91.99.5.210:8005/msg?teamcode={team_code}&msg={message}", "success_keyword": "success"},
-    "friends": {"url": "http://alliff-d5m-friends.hf.space/spam?uid={uid}", "success_keyword": "success"},
+    "friends": {"url": "https://spam-friends-production.up.railway.app/spam?user_uid={uid}", "success_keyword": "success"},
     "sp_clan": {"url": "http://alliff-d5m-clan.hf.space/SpamClan?clan_id={clan_id}", "success_keyword": "success"}
 }
 
