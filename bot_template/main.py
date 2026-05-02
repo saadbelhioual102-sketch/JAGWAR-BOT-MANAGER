@@ -14,11 +14,11 @@ from Crypto.Util.Padding import pad
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # إعدادات افتراضية (تستخدم فقط إذا لم توجد في config.json)
-DEFAULT_ADMIN_UID = "9933949869"
+DEFAULT_ADMIN_UID = "760840390"
 DEFAULT_COMMAND_PREFIX = "/"
-DEFAULT_BOT_NAME = "JAGWAR BOT"
-DEFAULT_OWNER_NAME = "JAGWAR"
-DEFAULT_OWNER_TELEGRAM = "@SOLO_JAGWAR"
+DEFAULT_BOT_NAME = "AlliFF BOT"
+DEFAULT_OWNER_NAME = "AlliFF"
+DEFAULT_OWNER_TELEGRAM = "@AlliFF_BOT"
 
 # متغيرات عامة سيتم تحميلها من config.json
 ADMIN_UID = DEFAULT_ADMIN_UID
@@ -42,6 +42,8 @@ current_config = {}
 # متغيرات لمراقبة صحة اتصال الدردشة
 last_chat_activity = time.time()
 chat_reconnect_attempts = 0
+last_reconnect_time = 0
+force_reconnect_flag = False
 
 def load_config():
     global ADMIN_UID, BOT_NAME, OWNER_NAME, OWNER_TELEGRAM, HELP_MSG_1, HELP_MSG_2, ADMIN_MSG, ONLINE_MSG, EMOJI_MSG, SUCCESS_MSG, ERROR_MSG, PROCESSING_MSG, CUSTOM_COMMANDS, SYSTEM_MESSAGES, COMMAND_PREFIX, current_config, CUSTOM_APIS
@@ -496,7 +498,7 @@ async def SEndMsG(H , message , Uid , chat_id , key , iv):
     return msg_packet
 
 async def SEndPacKeT(writer_whisper, writer_online, TypE, PacKeT):
-    """إرسال الحزمة مع التحقق من صحة الكاتب"""
+    """إرسال الحزمة مع التحقق من صحة الكاتب وإعادة المحاولة"""
     if TypE == 'ChaT':
         if not writer_whisper:
             print("[ERROR] whisper_writer is None, cannot send chat message")
@@ -526,7 +528,7 @@ async def handle_emoji_received(sender_id, key, iv, current_chat_type, current_c
 [33FFF3][b][c]To know the commands enter:
 [99FF80][c][b]/help
 [00FFFF]────────────────────
-[C][B][FFD700]⚡ Only JAGWAR
+[C][B][FFD700]⚡ Only AlliFF YT 2K
 [00FFFF]────────────────────"""
     
     P = await SEndMsG(current_chat_type, response_message, sender_id, current_chat_id, key, iv)
@@ -1085,25 +1087,44 @@ async def sp_clan_task(user_id, chat_id_param, chat_type_param, msg, key, iv):
     
     await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
 
-# ==================== نهاية دوال الأوامر ====================
+# ==================== دوال مراقبة صحة الاتصال ====================
 
-async def check_chat_health():
-    """مراقبة صحة اتصال الدردشة وإعادة الاتصال إذا لزم الأمر"""
-    global whisper_writer, last_chat_activity, chat_reconnect_attempts
+async def monitor_chat_health():
+    """مراقبة صحة اتصال الدردشة وإعادة الاتصال التلقائي"""
+    global whisper_writer, last_chat_activity, chat_reconnect_attempts, last_reconnect_time
     while True:
-        await asyncio.sleep(30)  # كل 30 ثانية
+        await asyncio.sleep(20)  # كل 20 ثانية
         now = time.time()
         
-        # إذا مر أكثر من 120 ثانية بدون نشاط في الدردشة
-        if now - last_chat_activity > 120:
-            print("[HEALTH] Chat seems dead, forcing reconnect...")
-            if whisper_writer:
-                try:
-                    whisper_writer.close()
-                except:
-                    pass
-                whisper_writer = None
-            chat_reconnect_attempts += 1
+        # إذا مر أكثر من 60 ثانية بدون نشاط في الدردشة
+        if now - last_chat_activity > 60:
+            print(f"[HEALTH] No chat activity for {now - last_chat_activity:.0f}s, attempting reconnect...")
+            
+            # منع إعادة الاتصال المتكررة
+            if now - last_reconnect_time > 30:
+                last_reconnect_time = now
+                chat_reconnect_attempts += 1
+                
+                if whisper_writer:
+                    try:
+                        whisper_writer.close()
+                    except:
+                        pass
+                    whisper_writer = None
+                
+                print(f"[HEALTH] Chat writer closed, will reconnect on next message")
+            else:
+                print(f"[HEALTH] Reconnect too soon, waiting...")
+
+async def check_whisper_health():
+    """فحص صحة كاتب الدردشة"""
+    global whisper_writer
+    if whisper_writer is None:
+        print("[HEALTH] whisper_writer is None, chat connection may be dead")
+        return False
+    return True
+
+# ==================== نهاية دوال المراقبة ====================
 
 async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
     global online_writer, whisper_writer
@@ -1128,7 +1149,7 @@ async def TcPOnLine(ip, port, key, iv, AutHToKen, reconnect_delay=0.5):
                         JoinCHaT = await AutH_Chat(3 , OwNer_UiD , CHaT_CoDe, key,iv)
                         await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , JoinCHaT)
 
-                        message = f'[B][C]{get_random_color()}\n🎯 JAGWAR BOT Online!\n[B][C][00FF00]Commands: Use /help'
+                        message = f'[B][C]{get_random_color()}\n🎯 AlliFF BOT Online!\n[B][C][00FF00]Commands: Use /help'
                         P = await SEndMsG(0 , message , OwNer_UiD , OwNer_UiD , key , iv)
                         await SEndPacKeT(whisper_writer , online_writer , 'ChaT' , P)
 
@@ -1178,7 +1199,7 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                         current_chat_type = response.Data.chat_type
                         inPuTMsG = response.Data.msg.lower()
                         
-                        # تحديث وقت آخر نشاط في الدردشة
+                        # تحديث وقت آخر نشاط في الدردشة (مهم جداً!)
                         last_chat_activity = time.time()
                     except:
                         continue
@@ -1197,6 +1218,35 @@ async def TcPChaT(ip, port, AutHToKen, key, iv, LoGinDaTaUncRypTinG, ready_event
                         if is_bot_muted():
                             continue
 
+                        # ==================== أوامر الصحة والاختبار ====================
+                        
+                        if check_cmd(inPuTMsG, 'ping'):
+                            P = await SEndMsG(current_chat_type, "[00FF00]✅ Pong! Chat is alive", current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'status') and is_admin(current_uid):
+                            chat_status = "✅ Alive" if whisper_writer else "❌ Dead"
+                            status_msg = f"""[C][B][00FFFF]📊 Bot Status:
+[00FF00]✅ Bot is running
+[00FF00]💬 Chat: {chat_status}
+[00FF00]🌐 Online: {'✅ Alive' if online_writer else '❌ Dead'}
+[00FF00]⏱️ Last activity: {time.time() - last_chat_activity:.0f}s ago"""
+                            P = await SEndMsG(current_chat_type, status_msg, current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
+                        elif check_cmd(inPuTMsG, 'rechat') and is_admin(current_uid):
+                            if whisper_writer:
+                                try:
+                                    whisper_writer.close()
+                                except:
+                                    pass
+                                whisper_writer = None
+                            P = await SEndMsG(current_chat_type, "[00FF00]✅ Chat reconnection forced! The bot will reconnect automatically.", current_uid, current_chat_id, key, iv)
+                            await SEndPacKeT(whisper_writer, online_writer, 'ChaT', P)
+                            continue
+                        
                         # ==================== الأوامر القديمة ====================
                         
                         if inPuTMsG.strip() == "" or inPuTMsG.strip().startswith(":") or inPuTMsG.strip().startswith("("):
@@ -1467,7 +1517,7 @@ async def MaiiiinE():
     os.system('clear')
     print(render('AlliFF', colors=['white', 'green'], align='center'))
     print('')
-    print(f" - JAGWAR BOT STarTinG And OnLine on TarGet : {TarGeT} | BOT NAME : {acc_name}\n")
+    print(f" - AlliFF BOT STarTinG And OnLine on TarGet : {TarGeT} | BOT NAME : {acc_name}\n")
     print(f" - BoT sTaTus > GooD | OnLinE ! (:")    
     print(f" - winter | Bot Uptime: {time.strftime('%H:%M:%S', time.gmtime(time.time() - bot_start_time))}")    
     await asyncio.gather(task1 , task2)
@@ -1492,7 +1542,7 @@ async def watch_config():
 async def StarTinG():
     global chat_reconnect_attempts
     watcher_task = asyncio.create_task(watch_config())
-    health_task = asyncio.create_task(check_chat_health())
+    health_task = asyncio.create_task(monitor_chat_health())
     
     while True:
         try:
@@ -1505,7 +1555,6 @@ async def StarTinG():
         finally:
             if connection_pool:
                 await connection_pool.close()
-            # انتظر 5 ثوانٍ قبل إعادة التشغيل
             await asyncio.sleep(5)
 
 if __name__ == '__main__':
