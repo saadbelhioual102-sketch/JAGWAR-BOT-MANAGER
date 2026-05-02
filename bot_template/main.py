@@ -200,7 +200,7 @@ def send_likes(uid):
     try:
         print(f"[DEBUG] Sending like request for UID: {uid}")
         likes_api_response = requests.get(
-            f"http://alliff-d5m-api-like.hf.space/like?uid={uid}",
+            f"https://like-api-production-071e.up.railway.app/like?uid={uid}",
             timeout=30
         )
         
