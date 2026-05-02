@@ -15,9 +15,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 ADMIN_UID = "760840390"
 COMMAND_PREFIX = "/"
-BOT_NAME = "AlliFF BOT"
+BOT_NAME = "JAGWAR BOT"
 OWNER_NAME = "AlliFF"
-OWNER_TELEGRAM = "@AlliFF_BOT"
+OWNER_TELEGRAM = "@SOLO_RAGNAR"
 HELP_MSG_1 = ""
 HELP_MSG_2 = ""
 ADMIN_MSG = ""
